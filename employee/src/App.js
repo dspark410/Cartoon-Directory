@@ -10,7 +10,8 @@ import friends from "./friends.json";
 class App extends Component {
 
   state = {
-    friends
+    friends,
+    filter:""
   }
 
   handleButtonClick = event => {
@@ -25,58 +26,52 @@ class App extends Component {
     this.sortReverseEmployees(this.state.friends)
   }
 
-  sortEmployees = friends => {
-    const newFriends = []
-    friends.sort(function(a, b) {
-      if(a.name.toLowerCase() < b.name.toLowerCase()) return -1;
-      if(a.name.toLowerCase() > b.name.toLowerCase()) return 1;
-      return 0;
-     })
-     .map(friend => {
-      console.log("friends???", friend)
-      newFriends.push(friend)
-      return friend
-     })
-     this.setState({newFriends})
-     ;
-  }
+  sortEmployees = (friends) => {
+    const newFriends = [...friends];
+    newFriends
+      .sort(function (a, b) {
+        if (a.name.toLowerCase() < b.name.toLowerCase()) return -1;
+        if (a.name.toLowerCase() > b.name.toLowerCase()) return 1;
+        return 0;
+      })
+    this.setState({friends: newFriends});
+  };
 
-  sortReverseEmployees = friends => {
-    const newFriends = []
-    friends.sort(function(a, b) {
-      if(a.name.toLowerCase() > b.name.toLowerCase()) return -1;
-      if(a.name.toLowerCase() < b.name.toLowerCase()) return 1;
-      return 0;
-     })
-     .map(friend => {
-      console.log("friends???", friend)
-      newFriends.push(friend)
-      return friend
-     })
-     this.setState({newFriends})
-     ;
-  }
+  sortReverseEmployees = (friends) => {
+    const newFriends = [...friends];
+    newFriends
+      .sort(function (a, b) {
+        if (a.name.toLowerCase() > b.name.toLowerCase()) return -1;
+        if (a.name.toLowerCase() < b.name.toLowerCase()) return 1;
+        return 0;
+      })
+    this.setState({friends: newFriends});
+  };
 
-  // handleInputChange = event => {
-  //   // Getting the value and name of the input which triggered the change
-  //   const { name, value } = event.target;
-  //   console.log("event", event.target)
-  //   // Updating the input's state
-  //   this.setState({
-  //     [name]: value
-  //   });
-  // }
+  handleOnChange = event => {
+    const value = event.target.value;
+    const name = event.target.name;
+    this.setState({
+      [name]: value
+    });
+    if(!value){
+      this.setState({friends})
+    }
+  };
+  filterEmployees = (event) => {
+    event.preventDefault();
+    if(!this.state.filter){
+      return
+    }
+    const employees = friends.filter(
+      (friend) => friend.name.toLowerCase() === this.state.filter.toLowerCase()
+    );
+    //console.log("employeessssss???", employees);
+    this.setState({ friends: employees });
+  };
 
 
-filterEmployees = (event) => {
-  
-  const employees = this.state.friends.filter(friend => friend.name.toLowerCase() === event.target.value.toLowerCase())
-  console.log("employees", employees)
-  
-  this.setState({
-    employees
-  })
-}
+
 
 
   render() {
@@ -84,7 +79,7 @@ filterEmployees = (event) => {
       <Wrapper>
         <Title>Employee Management Tracker</Title>
         <SearchForm
-          filterEmployees={this.filterEmployees}
+          handleOnChange={this.handleOnChange} filter={this.state.filter} filterEmployees={this.filterEmployees}
         />
         <Button handleButtonClick={this.handleButtonClick}>Sort A-Z</Button>
         <Button2 handleButtonClickDSC={this.handleButtonClickDSC}>Sort Z-A</Button2>

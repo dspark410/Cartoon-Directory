@@ -6,11 +6,13 @@ function SearchForm(props) {
     <div className="container">
       <div className="row">
         <div className="col-md-12">
-            <form>
-            <input onChange={props.filterEmployees}
+            <form onSubmit={props.filterEmployees}>
+            <input onChange={props.handleOnChange}
             className="form-control"
             type="text"
             placeholder="Search by name"
+            value={props.filter}
+            name="filter"
           ></input>
             </form>
          
